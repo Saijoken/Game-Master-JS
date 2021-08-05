@@ -1,0 +1,23 @@
+{
+  "name": "gamemaster",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adapter": "^1.0.0-beta.10",
+    "discord-buttons-react": "^0.0.4",
+    "discord.js": "^12.5.3",
+    "fs": "0.0.1-security",
+    "imgur": "^1.0.2",
+    "install": "^0.13.0",
+    "lowdb": "^2.1.0",
+    "node": "^16.5.0",
+    "npm": "^7.20.1",
+    "quick.db": "^7.1.3"
+  }
+}
