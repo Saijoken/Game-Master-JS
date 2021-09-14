@@ -5,7 +5,7 @@ const bank = new db.table("Bank")
 const {MessageEmbed} = require('discord.js');
 
 module.exports = {
-    name: 'money',
+    name: 'money', //aliases argent, portefeuille, compte, bal
     execute(message) {
         let user = message.mentions.members.first() || message.author;
         let argent = money.fetch(`money_${message.guild.id}_${user.id}`)
@@ -21,7 +21,7 @@ module.exports = {
                 .setThumbnail(useravatar.avatarURL())
                 .addField("Porte Monnaie", `${argent}`, true)
                 .addField("Compte en banque", `${banque}`, true)
-            return message.channel.send(embed)
+            return message.channel.send({embeds: [embed]})
         } else {
             const useravatar = message.author
             const embed = new MessageEmbed()
@@ -30,7 +30,7 @@ module.exports = {
                 .setThumbnail(useravatar.avatarURL())
                 .addField("Porte Monnaie", `${argent}`, true)
                 .addField("Compte en banque", `${banque}`, true)
-            return message.channel.send(embed)
+            return message.channel.send({embeds: [embed]})
         }
     }
 }

@@ -1,52 +1,60 @@
 const Discord = require('discord.js');
-const client = new Discord.Client();
-const fs = require('fs');
-const imgur = require('imgur');
+const {MessageEmbed} = require('discord.js');
+const ms = require("pretty-ms")
+const db = require('quick.db')
+const workdaily = new db.table("WorkDaily")
+const money = new db.table("Money")
 
 module.exports = {
     name: 'test',
-    execute(message) {      
-        message.channel.send("Hello");
-        setTimeout(() => { message.channel.send("World!"); }, 2000);
-        message.channel.send("Goodbye!");
+    execute(message, args) { 
+        let user = message.author;
+        const check = workdaily.get(`workerdaily_${message.guild.id}_${user.id}`)
+        const timeout = 86400000
+        if (check !== null && timeout - (Date.now() - check) > 0) {
+            
+            const TimeLeft = ms(timeout - (Date.now() - check)).slice(0, 8)
+            caracH = TimeLeft.slice(2,3)
+            if (caracH == "h") {
+                caracM = TimeLeft.slice(6,7)
+                stringH = TimeLeft.slice(0,2)
 
-    /*
-    const user = message.author
-    message.channel.send("**Histoire ? (max 2000 caractères)**").then(function (message) {
-        message.channel.awaitMessages(message => user.id === message.author.id, {max: 1, time: 120000}).then(collected5 => {
-            if (collected5.first().content.length <= 2000) {
-                message.channel.send("Bon âge")
-            } else {
-                message.channel.send("Merci de donner une histoire inférieur à 2000 caractères\nMerci de recommencer")
-                return
-            }
-        })
-    })
-    */
-   
-        /*
-        const user = message.author
-        message.channel.send("**Pour mieux voir les choses donne moi une image du visage de ton personnage.**").then(function (message) {
-            message.channel.awaitMessages(message => user.id === message.author.id, {max: 1, time: 120000}).then(collected3 => {
-                const imageurl = collected3.first().attachments.first().url
-
-                if (imageurl.endsWith(".png") || imageurl.endsWith(".jpeg") || imageurl.endsWith(".jpg") || imageurl.endsWith(".webp")) {
-                    message.channel.send("Sauvegarde de l'image en cours ...")
-                    imgur
-                        .uploadUrl(imageurl)
-                        .then((json) => {
-                            message.channel.bulkDelete(1)
-                            var imgurlink = json.link
-                            message.channel.send(imgurlink)
-                        }).catch((err) => {
-                            console.error(err.message);
-                        });
+                if (caracM == "m"){
+                    stringM = TimeLeft.slice(4,6)
                 } else {
-                    message.channel.send("Merci de donner une image non animé\nMerci de recommencer")
-                    return
+                    stringM = TimeLeft.slice(4,5)
                 }
-            })
-        })
-        */
+            } else {
+                caracM = TimeLeft.slice(5,6)
+                stringH = TimeLeft.slice(0,1)
+
+                if (caracM == "m"){
+                    stringM = TimeLeft.slice(3,5)
+                } else {
+                    stringM = TimeLeft.slice(3,4)
+                }
+            }
+            console.log(stringH)
+            console.log(stringM)
+            console.log(TimeLeft)
+            heure = "Heures"
+            minute = "Minutes"
+
+            if (stringH == "1"){
+                heure = "Heure"
+            }
+
+            if (stringM == "1"){
+                minute = "Minute"
+            }
+
+            message.channel.send(`**Tu as déjà pris ton argent du jour.\nReviens dans ${stringH} ${heure} et ${stringM} ${minute}.**`)
+
+        } else {
+            const reward = Math.floor(Math.random() * (150 - 100 + 1)) + 100
+            money.add(`money_${message.guild.id}_${user.id}`, reward)
+            workdaily.set(`workerdaily_${message.guild.id}_${user.id}`, Date.now())
+            message.channel.send(`**Vous avez gagner ${reward}€.\nReviens demain.**`)
+        }
     }
 }

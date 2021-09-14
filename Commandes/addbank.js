@@ -15,7 +15,9 @@ module.exports = {
                 .setTitle(":x: | Tu n'as pas assez de charisme pour utiliser cette commande. ")
                 .setColor('#E81224')
                 .setFooter("... C'est que pour les admins : Commande AddBank")
-            message.author.send({embeds: [embed]})
+            message.author.send({embeds: [embed]}).catch(err =>{
+                message.channel.send({embeds: [embed]})
+            })
         }  
     }
 }
